@@ -4890,8 +4890,6 @@
       ! or if we have turned off this diagnostic
       IF ( .not. ( Input_Opt%DO_SAVE_PL .and. Input_Opt%NFAM > 0 )) THEN
          Input_Opt%DO_SAVE_PL         = .FALSE.
-         Input_Opt%DO_SAVE_O3         = .FALSE.
-         Input_Opt%DO_SAVE_PCO        = .FALSE.
          Input_Opt%ND65               = 0
       ENDIF
 
@@ -6177,6 +6175,7 @@
      &  + MAX( Ind_('SO2' ,'A'), 0 )
      &  + MAX( Ind_('SO4' ,'A'), 0 )
      &  + MAX( Ind_('SO4s','A'), 0 )
+     &  + MAX( Ind_('HMS' ,'A'), 0 ) ! (jmm, 07/2/18)
      &  + MAX( Ind_('MSA' ,'A'), 0 )
      &  + MAX( Ind_('NH3' ,'A'), 0 )
      &  + MAX( Ind_('NH4' ,'A'), 0 )

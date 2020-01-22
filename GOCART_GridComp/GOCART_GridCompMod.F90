@@ -767,6 +767,14 @@ else
         RESTART    = MAPL_RestartSkip,     __RC__)
 
      call MAPL_AddImportSpec(GC,                                          &
+        SHORT_NAME = 'GEOSCHEM_HMS',                                      &
+        LONG_NAME  = 'Hydroxymethanesulfonate aerosol from GEOS-Chem',    &
+        UNITS      = 'kg/kg',                                             &
+        DIMS       = MAPL_DimsHorzVert,                                   &
+        VLOCATION  = MAPL_VLocationCenter,                                &
+        RESTART    = MAPL_RestartSkip,     __RC__)
+
+     call MAPL_AddImportSpec(GC,                                          &
         SHORT_NAME = 'GEOSCHEM_MSA',                                      &
         LONG_NAME  = 'Methanesulphonic acid from GEOS-Chem',              &
         UNITS      = 'kg/kg',                                             &
@@ -4143,6 +4151,7 @@ end subroutine aerosol_activation_properties
    real, pointer     :: ptr3d_GC_NH4 (:,:,:) => null()
    real, pointer     :: ptr3d_GC_NIT (:,:,:) => null()
    real, pointer     :: ptr3d_GC_NITs(:,:,:) => null()
+   real, pointer     :: ptr3d_GC_HMS (:,:,:) => null()
 
    Iam = 'copy_geoschem_to_intstate_forbundle_'
 
@@ -4461,9 +4470,11 @@ end subroutine aerosol_activation_properties
       int_name = 'GOCART::SO4_ForBundle'
       call MAPL_GetPointer(impChem,ptr3d_GC,'GEOSCHEM_SO4',rc=status)
       VERIFY_(STATUS)
+      call MAPL_GetPointer(impChem,ptr3d_GC_HMS,'GEOSCHEM_HMS',rc=status)
+      VERIFY_(STATUS)
       call MAPL_GetPointer(internal,ptr3d_int,trim(int_name),rc=status)
       VERIFY_(STATUS)
-      ptr3d_Int = ptr3d_GC
+      ptr3d_Int = ptr3d_GC + ( ptr3d_GC_HMS * 96.0 / 111.0 ) 
 
       ! MSA
       int_name = 'GOCART::MSA_ForBundle'
@@ -4551,6 +4562,7 @@ end subroutine aerosol_activation_properties
    real, pointer     :: ptr3d_GC_NH4  (:,:,:) => null()
    real, pointer     :: ptr3d_GC_NIT  (:,:,:) => null()
    real, pointer     :: ptr3d_GC_NITs (:,:,:) => null()
+   real, pointer     :: ptr3d_GC_HMS (:,:,:) => null()
 
    Iam = 'validate_intstate_forbundle_'
 
@@ -5038,6 +5050,15 @@ end subroutine aerosol_activation_properties
          write(*,'(a45,es16.7)') trim(gc_name)//':',SUM(ptr3d_GC(:,:,1:km))
       endif
 
+      ! HMS GEOS-Chem
+      if ( w_c%reg%pass_GEOSCHEM_SU ) then
+         gc_name = 'GEOSCHEM_HMS'
+         call MAPL_GetPointer(impChem,ptr3d_GC_HMS,trim(gc_name),rc=status)
+         VERIFY_(STATUS)
+         write(*,'(a45,es16.7)') trim(gc_name)//':',SUM(ptr3d_GC_HMS(:,:,1:km))
+      endif
+
+
       ! MSA internal state and w_c
       int_name = 'GOCART::MSA'
       intfb_name = trim(int_name)//'_ForBundle'
@@ -5072,6 +5093,7 @@ end subroutine aerosol_activation_properties
    if ( associated( ptr3d_GC_NH4  ) ) nullify(ptr3d_GC_NH4  )
    if ( associated( ptr3d_GC_NIT  ) ) nullify(ptr3d_GC_NIT  )
    if ( associated( ptr3d_GC_NITs ) ) nullify(ptr3d_GC_NITs )
+   if ( associated( ptr3d_GC_HMS ) ) nullify(ptr3d_GC_HMS )
 
    RETURN_(ESMF_SUCCESS)
 

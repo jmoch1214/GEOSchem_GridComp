@@ -735,9 +735,9 @@ contains
      IF(chemReg%doing_SU) THEN
         ! GEOSCHEM connections to GOCART
         CALL MAPL_AddConnectivity ( GC,                     &
-          SRC_NAME  = (/ "TRC_DMS",      "TRC_SO2",         &
+          SRC_NAME  = (/ "TRC_DMS",      "TRC_SO2", "TRC_HMS", &
                          "TRC_SO4",      "TRC_MSA"      /), &
-          DST_NAME  = (/ "GEOSCHEM_DMS", "GEOSCHEM_SO2",    &
+          DST_NAME  = (/ "GEOSCHEM_DMS", "GEOSCHEM_SO2", "GEOSCHEM_HMS",   &
                          "GEOSCHEM_SO4", "GEOSCHEM_MSA" /), &
           DST_ID=GOCART, SRC_ID=GEOSCHEM, __RC__)
      ENDIF
