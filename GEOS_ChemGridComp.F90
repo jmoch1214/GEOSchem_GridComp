@@ -686,6 +686,16 @@ contains
           DST_ID=GOCART, SRC_ID=GEOSCHEM, __RC__)
      ENDIF
 
+!    ... For GOCART::ChinaMASK (China Mask)
+!    -----------------------------
+     IF(chemReg%pass_GEOSCHEM_ChinaMASK) THEN
+        ! GEOSCHEM connections to GOCART
+        CALL MAPL_AddConnectivity ( GC,               &
+          SRC_NAME  = (/ "GCD_ChinaMASK"                 /), &
+          DST_NAME  = (/ "GCD_ChinaMASK"            /), &
+          DST_ID=GOCART, SRC_ID=GEOSCHEM, __RC__)
+     ENDIF
+
 !    ... For GOCART::DU (mineral dust)
 !    -----------------------------
      IF(chemReg%doing_DU) THEN
