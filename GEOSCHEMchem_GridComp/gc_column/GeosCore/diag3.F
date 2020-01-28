@@ -158,9 +158,6 @@
 
       CHARACTER(LEN=255), PARAMETER :: LOC = 'DIAG3 (diag3.F)'
 
-      ! RRTMG
-      LOGICAL                  :: IS_GAS, IS_AD21, IS_DUST
-
       ! To point to the species database
       CHARACTER(LEN=31)        :: Name
       TYPE(Species), POINTER   :: SpcInfo
@@ -190,7 +187,7 @@
       INTEGER, SAVE            :: id_ECIL1, id_ECOB1, id_OCIL1, id_OCOB1
       INTEGER, SAVE            :: id_CH2BR2
       INTEGER, SAVE            :: id_PAN,   id_HNO3,  id_EOH,   id_MGLY
-      INTEGER, SAVE            :: id_BENZ,  id_TOLU,  id_XYLE
+      INTEGER, SAVE            :: id_BENZ,  id_TOLU,  id_XYLE,  id_MOH
       INTEGER, SAVE            :: id_NAP,   id_POG1,  id_POG2
 
 !
@@ -292,6 +289,7 @@
          id_OCOB1     = Ind_('OCOB1'   )
          id_PAN       = Ind_('PAN'     )
          id_HNO3      = Ind_('HNO3'    )
+         id_MOH       = Ind_('MOH'     )
          id_EOH       = Ind_('EOH'     )
          id_MGLY      = Ind_('MGLY'    )
          id_BENZ      = Ind_('BENZ'    )

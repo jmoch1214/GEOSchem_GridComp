@@ -1022,9 +1022,8 @@ CONTAINS
        ENDIF
 
        !-------------------------------------------
-       ! %%%%% OC-phase POP emissions%%%%%
+       ! %%%%% OC-phase POP emissions %%%%%
        !-------------------------------------------
-
        ! HEMCO species ID
        HcoID = GetHemcoId( 'POPPOCPO', HcoState, LOC, RC )
        IF ( RC /= HCO_SUCCESS ) RETURN

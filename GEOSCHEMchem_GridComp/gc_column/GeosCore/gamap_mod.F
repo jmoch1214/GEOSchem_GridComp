@@ -95,7 +95,7 @@
       INTEGER :: id_OCPI,  id_OCPO,  id_OPOA1, id_OPOG1
       INTEGER :: id_PAN,   id_POA1,  id_PRPE
       INTEGER :: id_SO2,   id_TSOA1, id_POG1,  id_POG2
-      INTEGER :: id_TOLU,  id_XYLE,  id_HNO3
+      INTEGER :: id_TOLU,  id_XYLE,  id_HNO3,  id_MOH
 
       CONTAINS
 !EOC
@@ -4302,32 +4302,6 @@
 
          ENDDO
 
-         ! Extras for saving CO production fields
-         IF ( Input_Opt%DO_SAVE_PCO ) THEN
-
-            ! CO production from CH4
-            NTRAC(65) = NTRAC(65)+1
-            T = NTRAC(65)
-            NAME (T,65) = 'PCO_CH4'
-            FNAME(T,65) = 'PCO from CH4 only'
-            INDEX(T,65) = T + ( SPACING * 17 )
-            MOLC (T,65) = 1
-            MWT  (T,65) = 0e0
-            SCALE(T,65) = 1e0
-            UNIT(T,65) = 'molec/cm3/s'
-
-            ! CO production from NMVOC
-            NTRAC(65) = NTRAC(65)+1
-            T = NTRAC(65)
-            NAME (T,65) = 'PCO_NMVOC'
-            FNAME(T,65) = 'PCO from NMVOC only'
-            INDEX(T,65) = T + ( SPACING * 17 )
-            MOLC (T,65) = 1
-            MWT  (T,65) = 0e0
-            SCALE(T,65) = 1e0
-            UNIT(T,65) = 'molec/cm3/s'
-
-         ENDIF
       ENDIF
 #endif
 
@@ -4592,6 +4566,7 @@
       id_CH2O  = Ind_('CH2O' )
       id_CH4   = Ind_('CH4'  )
       id_CO    = Ind_('CO'   )
+      id_MOH   = Ind_('MOH'  )
       id_EOH   = Ind_('EOH'  )
       id_GLYC  = Ind_('GLYC' )
       id_GLYX  = Ind_('GLYX' )

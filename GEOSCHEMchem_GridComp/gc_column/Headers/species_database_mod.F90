@@ -1379,6 +1379,19 @@ CONTAINS
              WD_KcScaleFac = KcScale
              WD_RainoutEff = RainEff
 
+          CASE( 'MOH' )
+             FullName      = 'Methanol'
+             Formula       = 'CH3OH'
+             MW_g          = 32.04_fp
+             Is_Gas        = T
+             Is_Drydep     = T
+             Is_Wetdep     = T
+             DD_F0         = 1.0_fp
+             DD_Hstar_old  = 2.03e+2_fp
+             Henry_K0      = 2.03e+2_f8
+             Henry_CR      = 5600.0_f8
+             WD_RetFactor  = 2.0e-2_fp
+
           CASE( 'EOH' )
              FullName      = 'Ethanol'
              Formula       = 'C2H5OH'
@@ -3254,6 +3267,35 @@ CONTAINS
              WD_KcScaleFac = KcScale
              WD_RainoutEff = RainEff
 
+          CASE( 'HMS' ) ! jmm (07/08/18)
+
+             ! Halve the Kc (cloud condensate -> precip) rate
+             ! for the temperature range 237 K <= T < 258 K.
+             KcScale       = (/ 1.0_fp, 0.5_fp, 1.0_fp /)
+
+             ! Turn off rainout only when 237 K <= T < 258K.
+             RainEff       = (/ 1.0_fp, 0.0_fp, 1.0_fp /)
+
+             ! Enforce minimum dry deposition velocity (Vd) for SO4
+             ! (cf. Mian Chin's GOCART model)
+             ! Minimum Vd over snow/ice : 0.01 cm/s
+             ! Minimum Vd over land     : 0.01 cm/s
+             DvzMinVal     = (/ 0.01_fp, 0.01_fp /)
+
+             FullName      = 'Hydroxymethane sulfonate'
+             Formula       = 'HOCH2SO3'
+             MW_g          = 111.0_fp
+             Is_Gas        = F
+             Is_Drydep     = T
+             Is_Wetdep     = T
+             DD_DvzAerSnow = 0.03_fp
+             DD_DvzMinVal  = DvzMinVal
+             DD_F0         = 0.0_fp
+             DD_Hstar_Old  = 0.0_fp
+             WD_AerScavEff = 1.0_fp
+             WD_KcScaleFac = KcScale
+             WD_RainoutEff = RainEff
+             
           CASE( 'SOAIE' )
 
              ! Halve the Kc (cloud condensate -> precip) rate

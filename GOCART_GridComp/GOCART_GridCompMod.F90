@@ -586,6 +586,19 @@ else
 !   ---------------
     GEOSCHEM_on: if (state%chemReg%pass_GEOSCHEM) then
 
+!   GEOSCHEM - China Mask
+!   ---------------------
+    GEOSCHEM_ChinaMASK_on: if (r%pass_GEOSCHEM_ChinaMASK) then
+     call MAPL_AddImportSpec(GC,                                          &
+        SHORT_NAME = 'GCD_ChinaMASK',                                     &
+        LONG_NAME  = 'China Mask from GEOS-Chem',                         &
+        UNITS      = 'unitless',                                          &
+        DIMS       = MAPL_DimsHorzOnly,                                   &
+        VLOCATION  = MAPL_VLocationCenter,                                &
+        RESTART    = MAPL_RestartSkip,     __RC__)
+        write(*,*) "ChinaMask switch on"
+    end if GEOSCHEM_ChinaMASK_on
+
 !   GEOSCHEM species - BC
 !   ---------------------
     GEOSCHEM_BC_on: if (r%pass_GEOSCHEM_BC) then
@@ -763,6 +776,14 @@ else
      call MAPL_AddImportSpec(GC,                                          &
         SHORT_NAME = 'GEOSCHEM_SO4',                                      &
         LONG_NAME  = 'Sulphate aerosol from GEOS-Chem',                   &
+        UNITS      = 'kg/kg',                                             &
+        DIMS       = MAPL_DimsHorzVert,                                   &
+        VLOCATION  = MAPL_VLocationCenter,                                &
+        RESTART    = MAPL_RestartSkip,     __RC__)
+
+     call MAPL_AddImportSpec(GC,                                          &
+        SHORT_NAME = 'GEOSCHEM_HMS',                                      &
+        LONG_NAME  = 'Hydroxymethanesulfonate aerosol from GEOS-Chem',    &
         UNITS      = 'kg/kg',                                             &
         DIMS       = MAPL_DimsHorzVert,                                   &
         VLOCATION  = MAPL_VLocationCenter,                                &
@@ -4158,6 +4179,8 @@ end subroutine aerosol_activation_properties
    real, pointer     :: ptr3d_GC_NH4 (:,:,:) => null()
    real, pointer     :: ptr3d_GC_NIT (:,:,:) => null()
    real, pointer     :: ptr3d_GC_NITs(:,:,:) => null()
+   real, pointer     :: ptr3d_GC_HMS (:,:,:) => null()
+   real, pointer     :: ptr2d_ChinaMASK (:,:) => null()
 
    Iam = 'copy_geoschem_to_intstate_forbundle_'
 
@@ -4170,6 +4193,14 @@ end subroutine aerosol_activation_properties
 
    ! Get # vertical levels
    km = w_c%grid%km
+
+   ! Prepare China Mask
+!  if (w_c%reg%pass_GEOSCHEM_ChinaMASK ) then
+!      call MAPL_GetPointer(impChem,ptr2d_ChinaMASK,   &
+!           'GCD_ChinaMASK',rc=status)
+!      VERIFY_(STATUS)
+!   endif
+
 
    !---
    ! BC
@@ -4184,6 +4215,7 @@ end subroutine aerosol_activation_properties
       call MAPL_GetPointer(internal,ptr3d_int,trim(int_name),rc=status)
       VERIFY_(STATUS)
       ptr3d_Int = ptr3d_GC
+
 
       ! BCPI
       int_name = 'GOCART::BCphilic_ForBundle'
@@ -4243,7 +4275,17 @@ end subroutine aerosol_activation_properties
       VERIFY_(STATUS)
       call MAPL_GetPointer(internal,ptr3d_int,trim(int_name),rc=status)
       VERIFY_(STATUS)
-      ptr3d_Int = ptr3d_GC
+!      if ( w_c%reg%pass_GEOSCHEM_ChinaMASK ) then       
+!         do L = 1,size(ptr3d_GC,3)
+!         do J = 1,size(ptr3d_GC,2)
+!         do I = 1,size(ptr3d_GC,1)
+!            ptr3d_Int(I,J,L) = ptr2d_GC_ChinaMASK(I,J) * ptr3d_GC(I,J,L)
+!         enddo
+!         enddo
+!         enddo
+!      else
+!         ptr3d_Int = ptr3d_GC
+!      endif
 
       ! dust 2
       int_name = 'GOCART::du002_ForBundle'
@@ -4411,6 +4453,7 @@ end subroutine aerosol_activation_properties
       call MAPL_GetPointer(impChem,ptr3d_GC_SALC,'GEOSCHEM_SALC',rc=status)
       VERIFY_(STATUS)
 
+
       ! ss001
       int_name = 'GOCART::ss001_ForBundle'
       call MAPL_GetPointer(internal,ptr3d_Int,trim(int_name),rc=status)
@@ -4476,9 +4519,11 @@ end subroutine aerosol_activation_properties
       int_name = 'GOCART::SO4_ForBundle'
       call MAPL_GetPointer(impChem,ptr3d_GC,'GEOSCHEM_SO4',rc=status)
       VERIFY_(STATUS)
+      call MAPL_GetPointer(impChem,ptr3d_GC_HMS,'GEOSCHEM_HMS',rc=status)
+      VERIFY_(STATUS)
       call MAPL_GetPointer(internal,ptr3d_int,trim(int_name),rc=status)
       VERIFY_(STATUS)
-      ptr3d_Int = ptr3d_GC
+      ptr3d_Int = ptr3d_GC + ( ptr3d_GC_HMS * 96.0 / 111.0 ) 
 
       ! MSA
       int_name = 'GOCART::MSA_ForBundle'
@@ -4500,6 +4545,7 @@ end subroutine aerosol_activation_properties
    if ( associated( ptr3d_GC_NIT  ) ) nullify(ptr3d_GC_NIT )
    if ( associated( ptr3d_GC_NITs ) ) nullify(ptr3d_GC_NITs)
    if ( associated( ptr3d_int     ) ) nullify(ptr3d_int    )
+   if ( associated( ptr2d_ChinaMASK ) ) nullify(ptr2d_ChinaMASK )
 
    ! Sanity check prints
    if ( is_verbose ) then
@@ -4566,6 +4612,7 @@ end subroutine aerosol_activation_properties
    real, pointer     :: ptr3d_GC_NH4  (:,:,:) => null()
    real, pointer     :: ptr3d_GC_NIT  (:,:,:) => null()
    real, pointer     :: ptr3d_GC_NITs (:,:,:) => null()
+   real, pointer     :: ptr3d_GC_HMS (:,:,:) => null()
 
    Iam = 'validate_intstate_forbundle_'
 
@@ -5053,6 +5100,15 @@ end subroutine aerosol_activation_properties
          write(*,'(a45,es16.7)') trim(gc_name)//':',SUM(ptr3d_GC(:,:,1:km))
       endif
 
+      ! HMS GEOS-Chem
+      if ( w_c%reg%pass_GEOSCHEM_SU ) then
+         gc_name = 'GEOSCHEM_HMS'
+         call MAPL_GetPointer(impChem,ptr3d_GC_HMS,trim(gc_name),rc=status)
+         VERIFY_(STATUS)
+         write(*,'(a45,es16.7)') trim(gc_name)//':',SUM(ptr3d_GC_HMS(:,:,1:km))
+      endif
+
+
       ! MSA internal state and w_c
       int_name = 'GOCART::MSA'
       intfb_name = trim(int_name)//'_ForBundle'
@@ -5087,6 +5143,7 @@ end subroutine aerosol_activation_properties
    if ( associated( ptr3d_GC_NH4  ) ) nullify(ptr3d_GC_NH4  )
    if ( associated( ptr3d_GC_NIT  ) ) nullify(ptr3d_GC_NIT  )
    if ( associated( ptr3d_GC_NITs ) ) nullify(ptr3d_GC_NITs )
+   if ( associated( ptr3d_GC_HMS ) ) nullify(ptr3d_GC_HMS )
 
    RETURN_(ESMF_SUCCESS)
 

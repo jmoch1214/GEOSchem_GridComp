@@ -184,6 +184,8 @@
      logical :: pass_GEOSCHEM_Rn    ! radon
      logical :: pass_GEOSCHEM_SS    ! sea salt
      logical :: pass_GEOSCHEM_SU    ! sulfates
+     logical :: pass_GEOSCHEM_ChinaMASK ! China Mask
+
 
   end type Chem_Registry
 
@@ -406,6 +408,10 @@ CONTAINS
    if ( this%doing_SU ) then
       call parserc_gc_ ( 'SU', this%pass_GEOSCHEM, this%pass_GEOSCHEM_SU )
    endif
+
+   call parserc_gc_ ( 'ChinaMASK', this%pass_GEOSCHEM, &
+        this%pass_GEOSCHEM_ChinaMASK )
+
 		   
    call I90_Release()
 
@@ -711,6 +717,7 @@ RealNames: IF( ier .EQ. 0 ) THEN
    this%pass_GEOSCHEM_Rn  = .false.  ! radon
    this%pass_GEOSCHEM_SS  = .false.  ! sea salt
    this%pass_GEOSCHEM_SU  = .false.  ! sulfates
+   this%pass_GEOSCHEM_ChinaMASK  = .false.  ! China Mask
 
    deallocate ( this%vname, this%vtitle, this%vunits, this%fscav, &
                 this%rhop, this%molwght, this%rlow, this%rup, this%rmed, &
