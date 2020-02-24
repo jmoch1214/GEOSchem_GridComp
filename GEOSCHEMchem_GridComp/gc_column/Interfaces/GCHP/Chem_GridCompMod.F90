@@ -1026,14 +1026,14 @@ CONTAINS
        ! diagnostics. These may not be defined for all species (some species 
        ! don't have dry or wet dep), but at this point the species metadata 
        ! are not yet fully defined. Convective wet deposition flux
-       CALL MAPL_AddExportSpec(GC,                                            &
-          SHORT_NAME         = 'WetLossConv_'//TRIM(AdvSpc(I)),               & 
-          LONG_NAME          = TRIM(FullName)//' vertical integrated loss'//  &
-                               ' in convective updrafts',                     &
-          UNITS              = 'kg m-2 s-1',                                  &
-          DIMS               = MAPL_DimsHorzOnly,                             &
-          VLOCATION          = MAPL_VLocationNone,                            &
-                                                                     __RC__ )
+!       CALL MAPL_AddExportSpec(GC,                                            &
+!          SHORT_NAME         = 'WetLossConv_'//TRIM(AdvSpc(I)),               & 
+!          LONG_NAME          = TRIM(FullName)//' vertical integrated loss'//  &
+!                               ' in convective updrafts',                     &
+!          UNITS              = 'kg m-2 s-1',                                  &
+!          DIMS               = MAPL_DimsHorzOnly,                             &
+!          VLOCATION          = MAPL_VLocationNone,                            &
+!                                                                     __RC__ )
        ! 3D
        CALL MAPL_AddExportSpec(GC,                                            &
           SHORT_NAME         = 'WetLossConv3D_'//TRIM(AdvSpc(I)),             &
@@ -1043,14 +1043,14 @@ CONTAINS
           VLOCATION          = MAPL_VLocationCenter,                          &
                                                                      __RC__ )
        ! Large scale wet deposition flux
-       CALL MAPL_AddExportSpec(GC,                                            &
-          SHORT_NAME         = 'WetLossLS_'//TRIM(AdvSpc(I)),                 & 
-          LONG_NAME          = TRIM(FullName)//' vertical integrated loss'//  &
-                               ' in large scale precipitation',               &
-          UNITS              = 'kg m-2 s-1',                                  &
-          DIMS               = MAPL_DimsHorzOnly,                             &
-          VLOCATION          = MAPL_VLocationNone,                            &
-                                                                     __RC__ )
+!       CALL MAPL_AddExportSpec(GC,                                            &
+!          SHORT_NAME         = 'WetLossLS_'//TRIM(AdvSpc(I)),                 & 
+!          LONG_NAME          = TRIM(FullName)//' vertical integrated loss'//  &
+!                               ' in large scale precipitation',               &
+!          UNITS              = 'kg m-2 s-1',                                  &
+!          DIMS               = MAPL_DimsHorzOnly,                             &
+!          VLOCATION          = MAPL_VLocationNone,                            &
+!                                                                     __RC__ )
        CALL MAPL_AddExportSpec(GC,                                            &
           SHORT_NAME         = 'WetLossLS3D_'//TRIM(AdvSpc(I)),               & 
           LONG_NAME          = TRIM(FullName)//                               &
@@ -1077,13 +1077,13 @@ CONTAINS
           VLOCATION          = MAPL_VLocationCenter,                          &
                                                                      __RC__ )
        ! Dry deposition flux
-       CALL MAPL_AddExportSpec(GC,                                            &
-          SHORT_NAME         = 'DryDep_'//TRIM(AdvSpc(I)),                    & 
-          LONG_NAME          = TRIM(FullName)//' dry deposition flux',        &
-          UNITS              = 'molec cm-2 s-1',                              &
-          DIMS               = MAPL_DimsHorzOnly,                             &
-          VLOCATION          = MAPL_VLocationNone,                            &
-                                                                     __RC__ )
+!       CALL MAPL_AddExportSpec(GC,                                            &
+!          SHORT_NAME         = 'DryDep_'//TRIM(AdvSpc(I)),                    & 
+!          LONG_NAME          = TRIM(FullName)//' dry deposition flux',        &
+!          UNITS              = 'molec cm-2 s-1',                              &
+!          DIMS               = MAPL_DimsHorzOnly,                             &
+!          VLOCATION          = MAPL_VLocationNone,                            &
+!                                                                     __RC__ )
        ! Dry deposition velocity
        CALL MAPL_AddExportSpec(GC,                                            &
           SHORT_NAME         = 'DryDepVel_'//TRIM(AdvSpc(I)),                 & 
